@@ -4,24 +4,17 @@ import Card from "@material-ui/core/Card";
 import { CardHeader } from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
 import { getSmallIconOnClassName } from "../../../util/iconSrc";
-import { fetchParses } from "../../../services/warcraftLogsService";
 
 import ParseCard from "./CharacterParseCard/CharacterParseCard";
 
 const CharacterCard = ({ person, reportData }) => {
   const [parses, setParses] = React.useState(null);
 
-  const handleOnClick = async () => {
-    const data = await fetchParses(person, reportData.timeFrame);
-    console.log(data);
-    const releventData = data.filter((i) => i.reportID === reportData.id);
-    setParses(releventData);
-  };
 
   return (
     <Grid item xs={12}>
       <Card>
-        <CardActionArea onClick={handleOnClick}>
+        <CardActionArea>
           <CardHeader
             title={person.name}
             avatar={

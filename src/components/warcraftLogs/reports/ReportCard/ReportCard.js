@@ -1,20 +1,11 @@
 import React from "react";
 import { Grid, CardActionArea, CircularProgress } from "@material-ui/core";
 
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import { CardHeader } from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
 import CharacterCard from "../../CharacterView/CharacterCard";
-
-import { fetchReport } from "../../../../services/warcraftLogsService";
 import { useQuery , gql} from "@apollo/client";
-
-const useStyles = makeStyles(() => {});
-
-
-
 
 const ReportCard = ({ log, removeIfEmpty }) => {
   const [selected, setSelected] = React.useState(false);
@@ -61,8 +52,7 @@ const REPORT_QUERY = gql`
   }
 `;
 
-const CharactersContainer = ({code}) =>{   
-  console.log(code) 
+const CharactersContainer = ({code}) =>{  
   const { loading, error, data } = useQuery(REPORT_QUERY,{
     variables : {
       code
