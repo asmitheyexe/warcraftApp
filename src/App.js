@@ -11,7 +11,41 @@ import {
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Home from "./components/Home/home";
 
-function App() {
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  useQuery,
+  gql,
+  createHttpLink
+} from "@apollo/client";
+import { setContext } from '@apollo/client/link/context';
+
+
+
+function App({warcraftLogsToken}) {
+
+  const httpLink = createHttpLink({
+    uri: 'https://www.warcraftlogs.com/api/v2/client',
+  });
+  
+  const authLink = setContext((_, { headers }) => {
+    // get the authentication token from local storage if it exists
+    const token = warcraftLogsToken;
+    // return the headers to the context so httpLink can read them
+    return {
+      headers: {
+        ...headers,
+        authorization: token ? `Bearer ${token}` : "",
+      }
+    }
+  });
+  
+  const client = new ApolloClient({
+    link: authLink.concat(httpLink),
+    cache: new InMemoryCache()
+  });
+
   return (
     <>
       <div className="App">
@@ -28,7 +62,9 @@ function App() {
                 <Home />
               </Route>
               <Route path="/logs">
-                <ReportContainer />
+              <ApolloProvider client={client}>
+                  <ReportContainer />
+              </ApolloProvider>
               </Route>
             </Switch>
           </BrowserRouter>

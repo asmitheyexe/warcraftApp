@@ -2,26 +2,39 @@ import React from "react";
 import { Grid } from "@material-ui/core";
 
 import ReportCard from "./ReportCard/ReportCard";
+
 import {
-  fetchReportLogs,
-  fetchToken,
-} from "../../../services/warcraftLogsService";
+  gql, useQuery
+} from "@apollo/client";
+
+const REPORTS = gql`
+  query {
+    reportData{
+      reports(guildName: "Blitz Empire", guildServerSlug: "Area-52", guildServerRegion:"US") {
+        data{
+          code
+          guild{
+            name
+          }
+          owner{
+            name
+            id
+          }
+        }
+      }
+    }
+  }
+`;
+
 
 const ReportContainer = () => {
   const [logs, setLogs] = React.useState([]);
-
-  React.useEffect(() => {
-    const getLogs = async () => {
-      const data = await fetchReportLogs("Blitz Empire", "Area-52", "US");
-      setLogs(data);
-    };
-
-    const getToken = () => {
-      return fetchToken();
-    };
-    getToken().then((res) => getLogs());
-  }, []);
-
+  const { loading, error, data } = useQuery(REPORTS,{
+    variables: {
+      id : 66985125
+    }
+  });
+  console.log(loading,error,data)
   const removeFromList = (id) => {
     console.log(id);
     const newList = logs.filter((log) => log.id !== id);
