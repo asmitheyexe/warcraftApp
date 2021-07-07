@@ -29,7 +29,7 @@ const CharacterCard = ({ person, reportData }) => {
                 src={
                   process.env.PUBLIC_URL +
                   "/resources/wow_class_icons/" +
-                  getSmallIconOnClassName(person.type)
+                  getSmallIconOnClassName(person.subType)
                 }
                 alt="class icon"
               />

@@ -1,13 +1,42 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
+import { CircularProgress, Grid } from "@material-ui/core";
 
 import ReportCard from "./ReportCard/ReportCard";
-
+import {
+  ApolloProvider,
+} from "@apollo/client";
+import {warcraftLogsApolloClient} from '../../../util/ApolloClients/ApolloClinets';
 import {
   gql, useQuery
 } from "@apollo/client";
 
-const REPORTS = gql`
+const ReportContainer = () => {
+  const [apolloClient , setApolloClient ] = React.useState(null);
+
+
+  React.useEffect(() => {
+    const getClient = async () => {
+        const c =  await warcraftLogsApolloClient();
+        setApolloClient(c);
+    }
+    getClient();
+  },[])
+
+  return (
+    !apolloClient?<CircularProgress /> :
+      <ApolloProvider client={apolloClient}>
+        <Grid container direction="row" justify="center">
+          <Grid container item xs={11} style={{ marginTop: "1em" }} spacing={2}>
+            <Reports />
+          </Grid>
+        </Grid>
+      </ApolloProvider>
+
+  );
+};
+
+
+const REPORTS_QUERY = gql`
   query {
     reportData{
       reports(guildName: "Blitz Empire", guildServerSlug: "Area-52", guildServerRegion:"US") {
@@ -20,38 +49,25 @@ const REPORTS = gql`
             name
             id
           }
+          title
         }
       }
     }
   }
 `;
 
-
-const ReportContainer = () => {
-  const [logs, setLogs] = React.useState([]);
-  const { loading, error, data } = useQuery(REPORTS,{
-    variables: {
-      id : 66985125
-    }
-  });
-  console.log(loading,error,data)
+const Reports = () => {
+  const { loading, error, data } = useQuery(REPORTS_QUERY);
   const removeFromList = (id) => {
-    console.log(id);
-    const newList = logs.filter((log) => log.id !== id);
-    setLogs(newList);
+    // TODO
   };
-
-  const reports = logs.map((i) => {
-    return <ReportCard log={i} key={i.id} removeIfEmpty={removeFromList} />;
+  console.log(loading, error, data)
+  //console.log(data && data.reportData.reports.data)
+  const reports = !data? <div></div> : data.reportData.reports.data.map((i) => {
+    return <ReportCard log={i} key={i.code} removeIfEmpty={removeFromList} />;
   });
+  return loading? <CircularProgress /> : reports;
+  
 
-  return (
-    <Grid container direction="row" justify="center">
-      <Grid container item xs={11} style={{ marginTop: "1em" }} spacing={2}>
-        {reports}
-      </Grid>
-    </Grid>
-  );
-};
-
+}
 export default ReportContainer;
