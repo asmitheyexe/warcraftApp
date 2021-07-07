@@ -12,7 +12,7 @@ const CharacterCard = ({ person, reportData }) => {
 
 
   return (
-    <Grid item xs={12}>
+    <Grid item xs={6}>
       <Card>
         <CardActionArea>
           <CardHeader

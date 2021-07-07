@@ -1,5 +1,5 @@
 import React from "react";
-import { CircularProgress, Grid } from "@material-ui/core";
+import { Button, CircularProgress, Grid, Typography } from "@material-ui/core";
 
 import ReportCard from "./ReportCard/ReportCard";
 import {
@@ -12,7 +12,7 @@ import {
 
 const ReportContainer = () => {
   const [apolloClient , setApolloClient ] = React.useState(null);
-
+  const [zoneId, setZoneId] = React.useState(null);
 
   React.useEffect(() => {
     const getClient = async () => {
@@ -22,12 +22,14 @@ const ReportContainer = () => {
     getClient();
   },[])
 
+  const renderedComponent = !zoneId ? <SelectZone setZone={setZoneId} /> : <Reports zoneId={zoneId} ><Button onClick={() =>setZoneId(null)} variant='outlined'>Select New Zone</Button> </Reports>
   return (
     !apolloClient?<CircularProgress /> :
       <ApolloProvider client={apolloClient}>
+        <Typography variant='h4'>Warcraftlogs</Typography>
         <Grid container direction="row" justify="center">
-          <Grid container item xs={11} style={{ marginTop: "1em" }} spacing={2}>
-            <Reports />
+        <Grid container item xs={11} style={{ marginTop: "1em" }} spacing={2}>
+            {renderedComponent}
           </Grid>
         </Grid>
       </ApolloProvider>
@@ -35,11 +37,25 @@ const ReportContainer = () => {
   );
 };
 
+const SelectZone = ({setZone}) => {
+
+  return(
+    <Grid container item align='center' spacing={2} direction='row'>
+      <Grid item xs={12}>
+        <Button variant='outlined' onClick={() => setZone(26)} >Castle Nathria</Button> 
+      </Grid>
+      <Grid item xs={12}>
+      <Button variant='outlined' onClick={() => setZone(27)} >Sanctum of Domination</Button> 
+    </Grid>   
+    </Grid>
+  )
+}
+
 
 const REPORTS_QUERY = gql`
-  query {
+  query ($zoneId: Int!){
     reportData{
-      reports(guildName: "Blitz Empire", guildServerSlug: "Area-52", guildServerRegion:"US") {
+      reports(guildName: "Blitz Empire", guildServerSlug: "Area-52", guildServerRegion:"US", zoneID : $zoneId) {
         data{
           code
           guild{
@@ -56,8 +72,11 @@ const REPORTS_QUERY = gql`
   }
 `;
 
-const Reports = () => {
-  const { loading, error, data } = useQuery(REPORTS_QUERY);
+const Reports = ({zoneId,children}) => {
+  const { loading, error, data } = useQuery(REPORTS_QUERY,{
+    variables:{
+      zoneId
+    }});
   const removeFromList = (id) => {
     // TODO
   };
@@ -66,8 +85,22 @@ const Reports = () => {
   const reports = !data? <div></div> : data.reportData.reports.data.map((i) => {
     return <ReportCard log={i} key={i.code} removeIfEmpty={removeFromList} />;
   });
-  return loading? <CircularProgress /> : reports;
-  
 
+  
+  const returnComponent = <> 
+  {reports.length > 0? reports : (
+    <Grid container item justify='center'>
+      <Typography variant='caption1'>No Logs to Display</Typography>
+    </Grid>
+    )}
+
+  <Grid container item justify='center'>
+    {children}
+  
+  </Grid>
+  
+  </>
+
+  return loading? <CircularProgress /> : returnComponent;
 }
 export default ReportContainer;

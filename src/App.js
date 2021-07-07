@@ -19,11 +19,6 @@ function App() {
       <div className="App">
         <Grid container justify="center">
           <BrowserRouter>
-            <Link component={RouterLink} to="/">
-              <Typography style={{ color: "black" }} variant="h6">
-                Blitz Empire Elites
-              </Typography>
-            </Link>
             <NavBar />
             <Switch>
               <Route exact path="/">

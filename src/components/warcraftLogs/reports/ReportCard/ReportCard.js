@@ -9,8 +9,6 @@ import { useQuery , gql} from "@apollo/client";
 
 const ReportCard = ({ log, removeIfEmpty }) => {
   const [selected, setSelected] = React.useState(false);
-  
-
 
   const handleSelect = () => {
     setSelected(!selected)
@@ -47,6 +45,15 @@ const REPORT_QUERY = gql`
             subType
           }
         }
+        fights(killType: Kills){
+          averageItemLevel
+          difficulty
+          encounterID
+          id
+          kill
+          name
+          size
+        }
       }
     }
   }
@@ -63,7 +70,10 @@ const CharactersContainer = ({code}) =>{
     return i.subType !== "Unknown" && <CharacterCard person={i} key={i.id} />
   })
 
-  return loading? <CircularProgress /> : charactersInvolved
+
+  return loading? <CircularProgress /> :<Grid container spacing={2}>
+    {charactersInvolved}
+  </Grid> 
   ;
 
 
