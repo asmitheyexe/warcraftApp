@@ -1,83 +1,53 @@
 import React from "react";
-import { Grid, CardActionArea, CircularProgress } from "@material-ui/core";
+import {
+  Grid,
+  CardActionArea,
+  CircularProgress,
+  Button,
+  makeStyles,
+} from "@material-ui/core";
 
 import Card from "@material-ui/core/Card";
 import { CardHeader } from "@material-ui/core";
 import CardContent from "@material-ui/core/CardContent";
 import CharacterCard from "../../CharacterView/CharacterCard";
-import { useQuery , gql} from "@apollo/client";
+import { useQuery, gql } from "@apollo/client";
+import CharactersContainer from "../../CharacterView/CharacterContainer";
+
+const useStyles = makeStyles(() => ({
+  showCharactersBtn: {
+    marginLeft: "auto",
+  },
+}));
 
 const ReportCard = ({ log, removeIfEmpty }) => {
   const [selected, setSelected] = React.useState(false);
-
+  const [showCharacters, setShowCharacters] = React.useState(false);
+  const classes = useStyles();
   const handleSelect = () => {
-    setSelected(!selected)
-
-
-  }
+    setSelected(!selected);
+  };
   return (
     <Grid item xs={12}>
-      <Card variant="outlined">
+      <Card variant='outlined'>
         <CardActionArea onClick={() => handleSelect()}>
           <CardHeader title={log.title} />
         </CardActionArea>
-       { selected && <CardContent >
-          <CharactersContainer code={log.code} />
-        
-        </CardContent>}
+        {selected && (
+          <CardContent>
+            <Button
+              variant='outlined'
+              className={classes.showCharactersBtn}
+              onClick={() => setShowCharacters(!showCharacters)}
+            >
+              Show Characters
+            </Button>
+            {showCharacters && <CharactersContainer code={log.code} />}
+          </CardContent>
+        )}
       </Card>
     </Grid>
   );
 };
-
-
-const REPORT_QUERY = gql`
-  query ($code: String!){
-    reportData{
-      report(code: $code) {
-        masterData{
-          gameVersion
-          actors(type: "Player"){
-            id
-            name
-            server
-            type
-            subType
-          }
-        }
-        fights(killType: Kills){
-          averageItemLevel
-          difficulty
-          encounterID
-          id
-          kill
-          name
-          size
-        }
-      }
-    }
-  }
-`;
-
-const CharactersContainer = ({code}) =>{  
-  const { loading, error, data } = useQuery(REPORT_QUERY,{
-    variables : {
-      code
-    }})
-  console.log(loading, error, data);
-
-  const charactersInvolved = data && data.reportData.report.masterData.actors.map(i => {
-    return i.subType !== "Unknown" && <CharacterCard person={i} key={i.id} />
-  })
-
-
-  return loading? <CircularProgress /> :<Grid container spacing={2}>
-    {charactersInvolved}
-  </Grid> 
-  ;
-
-
-
-}
 
 export default ReportCard;

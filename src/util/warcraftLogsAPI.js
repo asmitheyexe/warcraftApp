@@ -17,6 +17,13 @@ class WarcraftLogsAPI {
   }
 
   initToken = async () => {
+
+    const tempTkn = localStorage.getItem('wcLogsToken', this.#token);
+
+    if(tempTkn){
+      return tempTkn;
+    }
+
     const data = await axios.request({
       url: "/oauth/token",
       method: "post",
@@ -30,6 +37,8 @@ class WarcraftLogsAPI {
       },
     });
     this.#token = data.data.access_token;
+    
+    localStorage.setItem('wcLogsToken', this.#token);
     return this.#token;
   };
 }
