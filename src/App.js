@@ -1,7 +1,7 @@
 import React from "react";
 import ReportContainer from "./components/warcraftLogs/reports/ReportContainer";
 import NavBar from "./components/Navbar/Navbar";
-import { Grid, Typography, Link } from "@material-ui/core";
+import { Grid, Typography, Link, ThemeProvider } from "@material-ui/core";
 import {
   BrowserRouter,
   Switch,
@@ -10,12 +10,11 @@ import {
 } from "react-router-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Home from "./components/Home/home";
-
+import theme from "./customTheme";
 
 function App() {
-
   return (
-    <>
+    <ThemeProvider theme={theme}>
       <div className="App">
         <Grid container justify="center">
           <BrowserRouter>
@@ -32,7 +31,7 @@ function App() {
         </Grid>
       </div>
       <CssBaseline />
-    </>
+    </ThemeProvider>
   );
 }
 

@@ -1,10 +1,12 @@
 import React from "react";
-import { Button, CircularProgress, Grid, Typography } from "@material-ui/core";
+import { Button, Grid, Typography } from "@material-ui/core";
 
 import ReportCard from "./ReportCard/ReportCard";
 import { ApolloProvider } from "@apollo/client";
 import { warcraftLogsApolloClient } from "../../../util/ApolloClients/ApolloClinets";
 import { gql, useQuery } from "@apollo/client";
+
+import LoadingWheel from "../../../util/LoadingWheel";
 
 const ReportContainer = () => {
   const [apolloClient, setApolloClient] = React.useState(null);
@@ -22,17 +24,17 @@ const ReportContainer = () => {
     <SelectZone setZone={setZoneId} />
   ) : (
     <Reports zoneId={zoneId}>
-      <Button onClick={() => setZoneId(null)} variant='outlined'>
+      <Button onClick={() => setZoneId(null)} variant="outlined">
         Select New Zone
-      </Button>{" "}
+      </Button>
     </Reports>
   );
   return !apolloClient ? (
-    <CircularProgress />
+    <LoadingWheel />
   ) : (
     <ApolloProvider client={apolloClient}>
-      <Typography variant='h4'>Warcraftlogs</Typography>
-      <Grid container direction='row' justify='center'>
+      <Typography variant="h4">Warcraftlogs</Typography>
+      <Grid container direction="row" justify="center">
         <Grid container item xs={11} style={{ marginTop: "1em" }} spacing={2}>
           {renderedComponent}
         </Grid>
@@ -43,14 +45,14 @@ const ReportContainer = () => {
 
 const SelectZone = ({ setZone }) => {
   return (
-    <Grid container item align='center' spacing={2} direction='row'>
+    <Grid container item align="center" spacing={2} direction="row">
       <Grid item xs={12}>
-        <Button variant='outlined' onClick={() => setZone(26)}>
+        <Button variant="outlined" onClick={() => setZone(26)}>
           Castle Nathria
         </Button>
       </Grid>
       <Grid item xs={12}>
-        <Button variant='outlined' onClick={() => setZone(27)}>
+        <Button variant="outlined" onClick={() => setZone(27)}>
           Sanctum of Domination
         </Button>
       </Grid>
@@ -107,17 +109,17 @@ const Reports = ({ zoneId, children }) => {
       {reports.length > 0 ? (
         reports
       ) : (
-        <Grid container item justify='center'>
-          <Typography variant='caption1'>No Logs to Display</Typography>
+        <Grid container item justify="center">
+          <Typography variant="caption1">No Logs to Display</Typography>
         </Grid>
       )}
 
-      <Grid container item justify='center'>
+      <Grid container item justify="center">
         {children}
       </Grid>
     </>
   );
 
-  return loading ? <CircularProgress /> : returnComponent;
+  return loading ? <LoadingWheel /> : returnComponent;
 };
 export default ReportContainer;
