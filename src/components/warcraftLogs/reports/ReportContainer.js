@@ -52,7 +52,7 @@ const SelectZone = ({ setZone }) => {
         </Button>
       </Grid>
       <Grid item xs={12}>
-        <Button variant="outlined" onClick={() => setZone(27)}>
+        <Button variant="outlined" onClick={() => setZone(28)}>
           Sanctum of Domination
         </Button>
       </Grid>

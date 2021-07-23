@@ -31,17 +31,18 @@ const REPORT_QUERY = gql`
         masterData {
           gameVersion
           actors(type: "Player") {
-            id
+            gameID
             name
             server
             type
             subType
           }
         }
-        fights(killType: Kills) {
+        fights(killType: Encounters) {
           averageItemLevel
           difficulty
           encounterID
+          fightPercentage
           id
           kill
           name
@@ -59,7 +60,6 @@ const ReportCard = ({ log, removeIfEmpty }) => {
     },
   });
   if (error) console.error(error);
-
   const [selected, setSelected] = React.useState(false);
   const [showCharacters, setShowCharacters] = React.useState(false);
   const classes = useStyles();

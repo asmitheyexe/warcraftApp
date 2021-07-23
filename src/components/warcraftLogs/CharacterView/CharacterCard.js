@@ -5,10 +5,24 @@ import CardContent from "@material-ui/core/CardContent";
 import { getSmallIconOnClassName } from "../../../util/iconSrc";
 
 import ParseCard from "./CharacterParseCard/CharacterParseCard";
+import { gql, useQuery } from "@apollo/client";
 
-const CharacterCard = ({ person, reportData }) => {
-  const [parses, setParses] = React.useState(null);
+// const Query = gql`
+// query ($id: String!, $encounterID : Int!) {
+//   CharacterData {
+//     CharacterData(id: $id) {
+//     }
+//   }
+// }
 
+
+const CharacterCard = ({ person, reportData }) => {  
+  // const { loading, error, data } = useQuery(Query, {
+  //   variables: {
+  //     id: person.gameID,
+  //   },
+  // });
+  console.log(person);
   return (
     <Grid item xs={3}>
       <Card>
@@ -27,13 +41,7 @@ const CharacterCard = ({ person, reportData }) => {
             }
           />
         </CardActionArea>
-        {parses && (
-          <CardContent>
-            {parses.map((i) => (
-              <ParseCard parse={i} />
-            ))}
-          </CardContent>
-        )}
+
       </Card>
     </Grid>
   );

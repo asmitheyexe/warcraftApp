@@ -6,6 +6,10 @@ const theme = createTheme({
     primary: {
       main: grey[900],
     },
+    background:{
+      default:grey[200],
+      paper:grey[300]
+    }
   },
 });
 

@@ -7,15 +7,27 @@ import {
   CardContent,
   Typography,
   CardActionArea,
+  makeStyles,
 } from "@material-ui/core";
+import { green, red } from "@material-ui/core/colors";
 
+const useStyles = makeStyles((theme) => ({
+  kill :{
+    backgroundColor : green[500]
+  },
+  wipe : {
+    backgroundColor : red[600]
+  }
+}));
+// fightPercentage
 const BossCard = ({ fight }) => {
   const [isSelected, setIsSelected] = React.useState(false);
+  const classes = useStyles();
   return (
     <Grid item xs={3}>
       <Card>
         <CardActionArea onClick={() => setIsSelected(!isSelected)}>
-          <CardHeader title={fight.name} />
+          <CardHeader title={fight.name} className={fight.kill?classes.kill : classes.wipe} />
         </CardActionArea>
         {isSelected && (
           <CardContent>
@@ -28,6 +40,7 @@ const BossCard = ({ fight }) => {
               data={getDifficulty(fight.difficulty)}
             />
             <LabelData label={"Participants:"} data={fight.size} />
+            {!fight.kill && <LabelData label={"Health %:"} data={fight.fightPercentage} />}
           </CardContent>
         )}
       </Card>
