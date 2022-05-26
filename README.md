@@ -1,1 +1,1 @@
-amature website by a amature web dev
+Dummy websight to get experience with GraphQL and React + Material UI components. This website is focused on pulling data from warcraftlogs.com which contains information with Blizzard Entertainment's World of Warcraft raid encounters. The data pulled is from my personal characters on the game and the performance on some raid encounters.
